@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freebuff2API Server</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <nav class="sidebar">
+      <div class="logo">Freebuff2API</div>
+      <div class="nav-items">
+        <a href="#" class="nav-item active" data-page="dashboard">Dashboard</a>
+        <a href="#" class="nav-item" data-page="accounts">Accounts</a>
+        <a href="#" class="nav-item" data-page="logs">Logs</a>
+        <a href="#" class="nav-item" data-page="usage">Usage</a>
+        <a href="#" class="nav-item" data-page="models">Models</a>
+      </div>
+      <div class="nav-footer">
+        <span id="server-version">v1.0.0</span>
+      </div>
+    </nav>
+
+    <main class="content">
+      <!-- Login Modal -->
+      <div id="login-modal" class="modal">
+        <div class="modal-content">
+          <h2>Admin Login</h2>
+          <input type="password" id="login-password" placeholder="Password" />
+          <button onclick="doLogin()">Login</button>
+        </div>
+      </div>
+
+      <!-- Dashboard Page -->
+      <div id="page-dashboard" class="page active">
+        <h1>Dashboard</h1>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Accounts</div>
+            <div class="stat-value" id="stat-accounts">-</div>
+            <div class="stat-sub"><span id="stat-alive">0</span> alive</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Today Requests</div>
+            <div class="stat-value" id="stat-requests">-</div>
+            <div class="stat-sub">Error rate: <span id="stat-error-rate">0%</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Today Tokens</div>
+            <div class="stat-value" id="stat-tokens">-</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Models</div>
+            <div class="stat-value" id="stat-models">-</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Uptime</h3>
+          <p id="stat-uptime">-</p>
+        </div>
+      </div>
+
+      <!-- Accounts Page -->
+      <div id="page-accounts" class="page">
+        <div class="page-header">
+          <h1>Accounts</h1>
+          <button class="btn-primary" onclick="showAddAccount()">+ Add Account</button>
+        </div>
+
+        <!-- Add Account Modal -->
+        <div id="add-account-modal" class="modal" style="display:none">
+          <div class="modal-content">
+            <h2>Add Account</h2>
+
+            <div class="tabs">
+              <button class="tab active" onclick="switchTab('oauth')">OAuth Login (Recommended)</button>
+              <button class="tab" onclick="switchTab('manual')">Manual Token</button>
+            </div>
+
+            <div id="tab-oauth" class="tab-content active">
+              <p>Click to open freebuff login page. System will auto-capture your token.</p>
+              <button id="btn-oauth" class="btn-primary" onclick="startOAuth()">Login with Freebuff</button>
+              <div id="oauth-status" style="display:none">
+                <div class="spinner"></div>
+                <span id="oauth-status-text">Waiting for login...</span>
+              </div>
+            </div>
+
+            <div id="tab-manual" class="tab-content">
+              <input type="text" id="manual-token" placeholder="Paste your freebuff token" />
+              <button class="btn-primary" onclick="addManualToken()">Add Token</button>
+            </div>
+
+            <button class="btn-cancel" onclick="hideAddAccount()">Cancel</button>
+          </div>
+        </div>
+
+        <div id="accounts-list" class="accounts-list"></div>
+      </div>
+
+      <!-- Logs Page -->
+      <div id="page-logs" class="page">
+        <div class="page-header">
+          <h1>Request Logs</h1>
+          <button class="btn-secondary" onclick="refreshLogs()">Refresh</button>
+        </div>
+        <div id="logs-list" class="logs-list"></div>
+      </div>
+
+      <!-- Usage Page -->
+      <div id="page-usage" class="page">
+        <h1>Usage</h1>
+        <div id="usage-stats"></div>
+      </div>
+
+      <!-- Models Page -->
+      <div id="page-models" class="page">
+        <h1>Models</h1>
+        <div id="models-list" class="models-list"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

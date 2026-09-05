@@ -1,0 +1,92 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: LXC/package-lock.json
+
+      - name: Install dependencies
+        working-directory: LXC
+        run: npm ci --production
+
+      - name: Verify server starts
+        working-directory: LXC
+        run: timeout 5 node server.js || true
+
+      - name: Create release package
+        run: |
+          tar czf freebuff2api-server.tar.gz \
+            --exclude='node_modules' \
+            --exclude='data' \
+            --exclude='.env' \
+            --exclude='*.db' \
+            --exclude='*.log' \
+            --exclude='.git' \
+            -C . LXC
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: freebuff2api-server-${{ github.sha }}
+          path: freebuff2api-server.tar.gz
+          retention-days: 30
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: freebuff2api-server-${{ github.sha }}
+
+      - name: Deploy to LXC
+        env:
+          PVE_HOST: ${{ secrets.PVE_HOST }}
+          PVE_SSH_KEY: ${{ secrets.PVE_SSH_KEY }}
+        run: |
+          if [ -z "$PVE_HOST" ]; then
+            echo "PVE_HOST secret not set, skipping deploy"
+            exit 0
+          fi
+          
+          mkdir -p ~/.ssh
+          echo "$PVE_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          
+          ssh -o StrictHostKeyChecking=no root@$PVE_HOST bash -s <<'REMOTE'
+          set -e
+          CTID=100
+          APP_DIR="/opt/freebuff2api"
+          
+          pct exec $CTID -- systemctl stop freebuff2api 2>/dev/null || true
+          pct exec $CTID -- mkdir -p $APP_DIR
+          
+          cat freebuff2api-server.tar.gz | pct exec $CTID -- bash -c "cd /tmp && tar xzf - -C / && mv LXC/* $APP_DIR/ 2>/dev/null; mv LXC $APP_DIR/ 2>/dev/null; true"
+          
+          pct exec $CTID -- bash -c "cd $APP_DIR && npm ci --production 2>/dev/null || npm install --production"
+          pct exec $CTID -- bash -c "test -f $APP_DIR/.env || cp $APP_DIR/.env.example $APP_DIR/.env"
+          
+          pct exec $CTID -- systemctl daemon-reload
+          pct exec $CTID -- systemctl enable freebuff2api
+          pct exec $CTID -- systemctl start freebuff2api
+          
+          echo "Deploy complete"
+          REMOTE
