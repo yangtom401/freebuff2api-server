@@ -38,7 +38,7 @@ jobs:
             --exclude='*.db' \
             --exclude='*.log' \
             --exclude='.git' \
-            -C . LXC
+            -C . LXC lx-source
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -79,7 +79,7 @@ jobs:
           pct exec $CTID -- systemctl stop freebuff2api 2>/dev/null || true
           pct exec $CTID -- mkdir -p $APP_DIR
           
-          cat freebuff2api-server.tar.gz | pct exec $CTID -- bash -c "cd /tmp && tar xzf - -C / && mv LXC/* $APP_DIR/ 2>/dev/null; mv LXC $APP_DIR/ 2>/dev/null; true"
+          cat freebuff2api-server.tar.gz | pct exec $CTID -- bash -c "cd /tmp && tar xzf - -C / && mv LXC/* $APP_DIR/ 2>/dev/null; mv LXC $APP_DIR/ 2>/dev/null; mkdir -p $APP_DIR/lx-source && mv lx-source/* $APP_DIR/lx-source/ 2>/dev/null; true"
           
           pct exec $CTID -- bash -c "cd $APP_DIR && npm ci --production 2>/dev/null || npm install --production"
           pct exec $CTID -- bash -c "test -f $APP_DIR/.env || cp $APP_DIR/.env.example $APP_DIR/.env"
