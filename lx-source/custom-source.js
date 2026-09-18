@@ -10,7 +10,7 @@
   'use strict'
 
   var CONFIG_VERSION = '1.0.0'
-  var RULES_URL = 'https://raw.githubusercontent.com/YOUR_USERNAME/lx-source/main/rules.json'
+  var RULES_URL = 'https://raw.githubusercontent.com/yangtom401/freebuff2api-server/master/lx-source/rules.json'
   var REQUEST_TIMEOUT = 2500
   var PRECHECK_TIMEOUT = 3000
   var MAX_FAKE_SIZE = 1572864

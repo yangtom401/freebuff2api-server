@@ -12,7 +12,7 @@
     ],
     "timeout": 2500
   },
-  "configUrl": "https://raw.githubusercontent.com/YOUR_USERNAME/lx-source/main/rules.json",
+  "configUrl": "https://raw.githubusercontent.com/yangtom401/freebuff2api-server/master/lx-source/rules.json",
   "upstreams": {
     "kw": [
       {
