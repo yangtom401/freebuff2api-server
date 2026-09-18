@@ -1,0 +1,144 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-09-18",
+  "mirrors": {
+    "github": [
+      "https://ghfast.top/",
+      "https://ghproxy.net/",
+      "https://mirror.ghproxy.com/",
+      "https://ghproxy.cn/",
+      "https://gh-proxy.com/",
+      "https://github.moeyy.xyz/"
+    ],
+    "timeout": 2500
+  },
+  "configUrl": "https://raw.githubusercontent.com/YOUR_USERNAME/lx-source/main/rules.json",
+  "upstreams": {
+    "kw": [
+      {
+        "name": "kw-api-1",
+        "url": "https://api.lxmusic.example/kw/url",
+        "priority": 1,
+        "enabled": true
+      },
+      {
+        "name": "kw-api-2",
+        "url": "https://backup.lxmusic.example/kw/url",
+        "priority": 2,
+        "enabled": true
+      }
+    ],
+    "kg": [
+      {
+        "name": "kg-api-1",
+        "url": "https://api.lxmusic.example/kg/url",
+        "priority": 1,
+        "enabled": true
+      },
+      {
+        "name": "kg-api-2",
+        "url": "https://backup.lxmusic.example/kg/url",
+        "priority": 2,
+        "enabled": true
+      }
+    ],
+    "tx": [
+      {
+        "name": "tx-api-1",
+        "url": "https://api.lxmusic.example/tx/url",
+        "priority": 1,
+        "enabled": true
+      },
+      {
+        "name": "tx-api-2",
+        "url": "https://backup.lxmusic.example/tx/url",
+        "priority": 2,
+        "enabled": true
+      }
+    ],
+    "wy": [
+      {
+        "name": "wy-api-1",
+        "url": "https://api.lxmusic.example/wy/url",
+        "priority": 1,
+        "enabled": true
+      },
+      {
+        "name": "wy-api-2",
+        "url": "https://backup.lxmusic.example/wy/url",
+        "priority": 2,
+        "enabled": true
+      }
+    ],
+    "mg": [
+      {
+        "name": "mg-api-1",
+        "url": "https://api.lxmusic.example/mg/url",
+        "priority": 1,
+        "enabled": true
+      },
+      {
+        "name": "mg-api-2",
+        "url": "https://backup.lxmusic.example/mg/url",
+        "priority": 2,
+        "enabled": true
+      }
+    ]
+  },
+  "fakeAudioFilter": {
+    "enabled": true,
+    "maxFileSize": 1572864,
+    "minValidSize": 1048576,
+    "timeout": 3000,
+    "blacklistDomains": [
+      "ad.example.com",
+      "promo.example.com",
+      "redirect.example.com"
+    ],
+    "blacklistMd5": [],
+    "fakeAudioPatterns": [
+      "请到.*收听",
+      "版权.*限制",
+      "VIP.*专享",
+      "请.*APP"
+    ],
+    "errorCodes": [403, 404, 410, 451]
+  },
+  "localFallback": {
+    "kw": [
+      {
+        "name": "kw-local-fallback",
+        "url": "https://api.lxmusic.example/kw/url",
+        "priority": 99
+      }
+    ],
+    "kg": [
+      {
+        "name": "kg-local-fallback",
+        "url": "https://api.lxmusic.example/kg/url",
+        "priority": 99
+      }
+    ],
+    "tx": [
+      {
+        "name": "tx-local-fallback",
+        "url": "https://api.lxmusic.example/tx/url",
+        "priority": 99
+      }
+    ],
+    "wy": [
+      {
+        "name": "wy-local-fallback",
+        "url": "https://api.lxmusic.example/wy/url",
+        "priority": 99
+      }
+    ],
+    "mg": [
+      {
+        "name": "mg-local-fallback",
+        "url": "https://api.lxmusic.example/mg/url",
+        "priority": 99
+      }
+    ]
+  }
+}
